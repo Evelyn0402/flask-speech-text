@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Speech to Text Converter - GreatStack</title>
+        <title>Speech Recognition in Python</title>
+        <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
+        
+    </head>
+<body>
+
+<div class="hero">
+    <h1><span>Alfred</span> - Speech to text Converter </h1>
+    <br>
+    <form method="post" enctype="multipart/form-data">
+        <br>
+        <input type="file" name="file"/>
+        <span class="line-break"></span> <!-- Line break here -->
+        <br>
+        <input type="submit" id="submitButton" value="Transcribe"/>
+    </form>
+    <span class="line-break"></span> <!-- Line break here -->
+
+    <textarea placeholder=" Transcription ...">
+        {% if transcript != '' %}
+            {{ transcript }}
+        {% endif %}
+    </textarea>
+   
+    
+
+</body>
+</html>
