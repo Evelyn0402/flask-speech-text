@@ -1,0 +1,42 @@
+trigger:
+  branches:
+    include:
+      - main  # 或者你的主分支名称，通常是 'main' 或 'master'
+
+pool:
+  vmImage: 'ubuntu-latest'  # 使用 Ubuntu 代理来运行构建
+
+steps:
+  - task: UsePythonVersion@0  # 设置 Python 版本
+    inputs:
+      versionSpec: '3.9'  # 或者你需要的 Python 版本
+      addToPath: true
+
+  - checkout: self  # 检出 GitHub 仓库的代码
+
+  - script: |
+      python -m venv venv  # 创建虚拟环境
+      source venv/bin/activate  # 激活虚拟环境
+      pip install -r requirements.txt  # 安装依赖
+    displayName: 'Install dependencies'
+
+  - script: |
+      python -m unittest discover tests/  # 如果你有测试文件夹，运行测试
+    displayName: 'Run tests'
+
+  - task: Docker@2  # 使用 Docker 任务构建 Docker 镜像
+    inputs:
+      command: 'buildAndPush'
+      repository: 'speech-to-text'  # 你可以设置一个变量，指定 Docker 镜像名称
+      dockerfile: '**/Dockerfile'  # 你的 Dockerfile 路径
+      containerRegistry: '$(dockerRegistryServiceConnection)'  # Docker 注册表连接
+      tags: 'latest'
+
+  - task: AzureWebAppContainer@1  # 部署到 Azure Web 应用（如果你使用 Web App for Containers）
+    inputs:
+      azureSubscription: '$(azureSubscription)'  # Azure 订阅连接
+      appName: '$(webAppName)'  # Web 应用名称
+      containers: |
+        $(dockerRepository):$(Build.BuildId)
+
+
