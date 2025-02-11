@@ -29,7 +29,7 @@ steps:
       command: 'buildAndPush'
       repository: 'flask-app'  # 你可以设置一个变量，指定 Docker 镜像名称
       dockerfile: '**/Dockerfile'  # 你的 Dockerfile 路径
-      containerRegistry: 'myACR-service-connection'  # Docker 注册表连接
+      containerRegistry: 'myACR-docker-connection'  # Docker 注册表连接
       tags: 'latest'
 
   # - task: AzureWebAppContainer@1  # 部署到 Azure Web 应用（如果你使用 Web App for Containers）
